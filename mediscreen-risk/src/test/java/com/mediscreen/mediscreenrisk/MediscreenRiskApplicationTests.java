@@ -1,10 +1,10 @@
-package com.mediscreen.mediscreenregistry;
+package com.mediscreen.mediscreenrisk;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MediscreenRegistryApplicationTests {
+class MediscreenRiskApplicationTests {
 
 	@Test
 	void contextLoads() {

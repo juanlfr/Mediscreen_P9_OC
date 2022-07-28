@@ -2,8 +2,8 @@ package com.mediscreen.mediscreennotes.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -12,14 +12,17 @@ public class Note {
 
     @Id
     private String id;
+    @Field("patientId")
+    private String patientId;
     private String note;
     private LocalDateTime creationDate;
 
     public Note() {
     }
 
-    public Note(String id, String note, LocalDateTime creationDate) {
-        this.id = id;
+    public Note(String id, String patientId, String note, LocalDateTime creationDate) {
+        this.id= id;
+        this.patientId = patientId;
         this.note = note;
         this.creationDate = creationDate;
     }
@@ -28,8 +31,12 @@ public class Note {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
     }
 
     public String getNote() {
@@ -53,18 +60,18 @@ public class Note {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Note note1 = (Note) o;
-        return getId().equals(note1.getId()) && Objects.equals(getNote(), note1.getNote()) && Objects.equals(getCreationDate(), note1.getCreationDate());
+        return getPatientId().equals(note1.getPatientId()) && Objects.equals(getNote(), note1.getNote()) && Objects.equals(getCreationDate(), note1.getCreationDate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getNote(), getCreationDate());
+        return Objects.hash(getPatientId(), getNote(), getCreationDate());
     }
 
     @Override
     public String toString() {
         return "Note{" +
-                "id='" + id + '\'' +
+                "id='" + patientId + '\'' +
                 ", note='" + note + '\'' +
                 ", creationDate=" + creationDate +
                 '}';

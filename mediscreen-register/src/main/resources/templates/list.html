@@ -9,32 +9,35 @@
     <title>Patients</title>
 </head>
 <body>
-<h2>Patients Info </h2>
-<table class="table">
-    <thead>
-    <th>Id</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Birth date</th>
-    <th>Gender</th>
-    <th>Address</th>
-    <th>Phone</th>
-    <th>Action</th>
-    </thead>
-    <tbody>
-    <tr th:each="patient : ${patientsInfoList}">
-       <td th:text="${patient.getId()}"></td>
-       <td th:text="${patient.getFirstName()}"></td>
-       <td th:text="${patient.getLastName()}"></td>
-       <td th:text="${patient.getDateOfBirth()}"></td>
-       <td th:text="${patient.getGender()}"></td>
-       <td th:text="${patient.getAddress()}"></td>
-       <td th:text="${patient.getPhone()}"></td>
-       <td><a class="btn btn-primary btn-sm" th:href="@{/patient/update/{id}(id=${patient.getId()})}">Edit</a></td>
-    </tr>
-    </tbody>
-    <a href="/patient/add">Add New Patient</a>
-</table>
-
+<div class="container">
+    <h2>Patients Info </h2>
+    <table class="table">
+        <thead>
+        <th>Id</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Birth date</th>
+        <th>Gender</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Action</th>
+        </thead>
+        <tbody>
+        <tr th:each="patient : ${patientsInfoList}">
+           <td th:text="${patient.getId()}"></td>
+           <td th:text="${patient.getFirstName()}"></td>
+           <td th:text="${patient.getLastName()}"></td>
+           <td th:text="${patient.getDateOfBirth()}"></td>
+           <td th:text="${patient.getGender()}"></td>
+           <td th:text="${patient.getAddress()}"></td>
+           <td th:text="${patient.getPhone()}"></td>
+           <td><a class="btn btn-primary btn-sm" th:href="@{/patient/update/{id}(id=${patient.getId()})}">Edit</a>
+               <a class="btn btn-info btn-sm" th:href="@{/patient/patHistory/{id}(id=${patient.getId()})}">Patient history</a>
+           </td>
+        </tr>
+        </tbody>
+        <a href="/patient/add">Add New Patient</a>
+    </table>
+</div>
 </body>
 </html>

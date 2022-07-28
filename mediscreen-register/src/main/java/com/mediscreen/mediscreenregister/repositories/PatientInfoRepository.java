@@ -1,6 +1,6 @@
-package com.mediscreen.mediscreenregistry.repositories;
+package com.mediscreen.mediscreenregister.repositories;
 
-import com.mediscreen.mediscreenregistry.models.PatientInfo;
+import com.mediscreen.mediscreenregister.models.PatientInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PatientInfoRepository extends JpaRepository<PatientInfo, Long> {

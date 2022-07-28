@@ -1,20 +1,21 @@
-package com.mediscreen.mediscreenregistry;
+package com.mediscreen.mediscreenregister;
 
-import com.mediscreen.mediscreenregistry.models.PatientInfo;
+import com.mediscreen.mediscreenregister.models.NoteBean;
+import com.mediscreen.mediscreenregister.models.PatientInfo;
 
-import com.mediscreen.mediscreenregistry.services.PatientInfoServiceImpl;
+import com.mediscreen.mediscreenregister.services.PatientInfoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -65,5 +66,15 @@ public class PatientInfoServicceTest {
 
         List<PatientInfo> patientInfos = patientInfoService.findAll();
         assertEquals(2, patientInfoService.findAll().size());
+    }
+    @Test
+    public void getAllPatientHistoryNotesTest() {
+        List<NoteBean> noteBeans = patientInfoService.getAllPatientHistoryNotes("1");
+        assertNotNull(noteBeans);
+    }
+    @Test
+    public void createHistoryNoteTest() {
+        NoteBean noteBean = new NoteBean("99","99", "Doctors said that...patient is OK", LocalDateTime.now() );
+        assertTrue(patientInfoService.createPatientHistoryNote(noteBean).getStatusCode().is2xxSuccessful());
     }
 }

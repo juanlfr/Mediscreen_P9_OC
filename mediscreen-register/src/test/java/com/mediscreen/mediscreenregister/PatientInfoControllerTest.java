@@ -1,20 +1,18 @@
-package com.mediscreen.mediscreenregistry;
+package com.mediscreen.mediscreenregister;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.mediscreen.mediscreenregistry.controllers.PatientInfoController;
-import com.mediscreen.mediscreenregistry.models.PatientInfo;
-import com.mediscreen.mediscreenregistry.services.PatientInfoService;
+import com.mediscreen.mediscreenregister.controllers.PatientInfoController;
+import com.mediscreen.mediscreenregister.models.PatientInfo;
+import com.mediscreen.mediscreenregister.services.PatientInfoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;

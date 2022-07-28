@@ -1,6 +1,6 @@
-package com.mediscreen.mediscreenregistry.exceptions;
+package com.mediscreen.mediscreenregister.exceptions;
 
-import com.mediscreen.mediscreenregistry.controllers.PatientInfoController;
+import com.mediscreen.mediscreenregister.controllers.PatientInfoController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,4 @@
-package com.mediscreen.mediscreenregistry.models;
-
-import org.springframework.format.annotation.DateTimeFormat;
+package com.mediscreen.mediscreenregister.models;
 
 import javax.persistence.Id;
 

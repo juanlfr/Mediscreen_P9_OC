@@ -1,7 +1,9 @@
-package com.mediscreen.mediscreenregistry.controllers;
+package com.mediscreen.mediscreenregister.controllers;
 
-import com.mediscreen.mediscreenregistry.models.PatientInfo;
-import com.mediscreen.mediscreenregistry.services.PatientInfoService;
+import com.mediscreen.mediscreenregister.DTO.PatientInfoRiskDTO;
+import com.mediscreen.mediscreenregister.models.NoteBean;
+import com.mediscreen.mediscreenregister.services.PatientInfoService;
+import com.mediscreen.mediscreenregister.models.PatientInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -35,7 +39,6 @@ public class PatientInfoController {
         model.addAttribute("patientsInfoList", patientInfoService.findAll());
         return "list";
     }
-
     @GetMapping("/add")
     public String addPatientInfoForm(PatientInfo patientInfo, Model model) {
         model.addAttribute("patientInfo", new PatientInfo());
@@ -97,6 +100,38 @@ public class PatientInfoController {
         }
         return "redirect:/patient/patientInfo";
     }
+    @GetMapping("/patHistory/{id}")
+    public String showPatientHistory(@PathVariable("id") String id, Model model) {
+        List<NoteBean> notesBean = patientInfoService.getAllPatientHistoryNotes(id);
+        model.addAttribute("notes", notesBean);
+        return "patientHistory";
+    }
+    @GetMapping("/patHistory/add/{patientId}")
+    public String addPatientHistoryForm(@PathVariable("patientId") String patientId, Model model) {
+        NoteBean noteBean = new NoteBean();
+        noteBean.setPatientId(patientId);
+        model.addAttribute("note", noteBean);
+        return "addHistory";
+    }
+    @PostMapping("/patHistory/form")
+    public String formCreateHistoryNote(@ModelAttribute("note") @Valid NoteBean noteBean, BindingResult result) {
+
+        log.info("validate create patient method");
+        if (result.hasErrors()) {
+            return "addHistory";
+        }
+        try {
+            noteBean.setCreationDate(LocalDateTime.now());
+            patientInfoService.createPatientHistoryNote(noteBean);
+            log.info("Creating note" + noteBean);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Error Creating patient note");
+        }
+        return "redirect:/patient/patientInfo";
+    }
+
+
 
     //API enpoints
 
@@ -145,6 +180,25 @@ public class PatientInfoController {
         else {
             throw new NoSuchElementException();
         }
+    }
+    @GetMapping("/api/riskInfo/{id}")
+    public ResponseEntity<PatientInfoRiskDTO> getPatientInfoForRisk(@PathVariable("id") Long id) {
+        Optional<PatientInfo> patientInfo = patientInfoService.findById(id);
+        if (patientInfo.isPresent()) {
+            PatientInfoRiskDTO patientInfoRiskDTO = patientInfoToDTO(patientInfo.get());
+            return new ResponseEntity<>(patientInfoRiskDTO, HttpStatus.OK);
+        }
+        else {
+
+            throw new NoSuchElementException();
+        }
+    }
+
+    private PatientInfoRiskDTO patientInfoToDTO(PatientInfo patientInfo) {
+        PatientInfoRiskDTO patientInfoRiskDTO = new PatientInfoRiskDTO();
+        patientInfoRiskDTO.setDateOfBirth(patientInfo.getDateOfBirth());
+        patientInfoRiskDTO.setGender(patientInfo.getGender());
+        return patientInfoRiskDTO;
     }
 
     @PutMapping("/api/{fullName}")

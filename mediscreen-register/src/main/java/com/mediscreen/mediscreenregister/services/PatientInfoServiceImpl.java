@@ -1,8 +1,11 @@
-package com.mediscreen.mediscreenregistry.services;
+package com.mediscreen.mediscreenregister.services;
 
-import com.mediscreen.mediscreenregistry.models.PatientInfo;
-import com.mediscreen.mediscreenregistry.repositories.PatientInfoRepository;
+import com.mediscreen.mediscreenregister.models.NoteBean;
+import com.mediscreen.mediscreenregister.models.PatientInfo;
+import com.mediscreen.mediscreenregister.proxies.MediscreenNotesProxy;
+import com.mediscreen.mediscreenregister.repositories.PatientInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +16,9 @@ public class PatientInfoServiceImpl implements PatientInfoService {
 
     @Autowired
     private PatientInfoRepository patientInfoRepository;
+
+    @Autowired
+    private MediscreenNotesProxy mediscreenNotesProxy;
 
     public PatientInfo getPatientInfo(String fullName) {
         String[] name = fullName.trim().split("\\s+");
@@ -32,5 +38,14 @@ public class PatientInfoServiceImpl implements PatientInfoService {
     @Override
     public Optional<PatientInfo> findById(Long id) {
         return patientInfoRepository.findById(id);
+    }
+
+    @Override
+    public List<NoteBean> getAllPatientHistoryNotes(String id) {
+        return mediscreenNotesProxy.findAllById(id);
+    }
+    @Override
+    public ResponseEntity<Void> createPatientHistoryNote(NoteBean noteBean) {
+        return mediscreenNotesProxy.createNote(noteBean);
     }
 }
