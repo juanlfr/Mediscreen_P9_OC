@@ -19,5 +19,8 @@ public interface PatientInfoService {
     List<NoteBean> getAllPatientHistoryNotes(String id);
 
     ResponseEntity<Void> createPatientHistoryNote(NoteBean noteBean);
+
+
+    String generateRiskReport(String patientId);
 }
 

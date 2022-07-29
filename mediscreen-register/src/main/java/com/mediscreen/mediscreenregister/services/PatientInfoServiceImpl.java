@@ -3,6 +3,7 @@ package com.mediscreen.mediscreenregister.services;
 import com.mediscreen.mediscreenregister.models.NoteBean;
 import com.mediscreen.mediscreenregister.models.PatientInfo;
 import com.mediscreen.mediscreenregister.proxies.MediscreenNotesProxy;
+import com.mediscreen.mediscreenregister.proxies.MediscreenRiskProxy;
 import com.mediscreen.mediscreenregister.repositories.PatientInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ public class PatientInfoServiceImpl implements PatientInfoService {
 
     @Autowired
     private MediscreenNotesProxy mediscreenNotesProxy;
+
+    @Autowired
+    private MediscreenRiskProxy mediscreenRiskProxy;
 
     public PatientInfo getPatientInfo(String fullName) {
         String[] name = fullName.trim().split("\\s+");
@@ -47,5 +51,11 @@ public class PatientInfoServiceImpl implements PatientInfoService {
     @Override
     public ResponseEntity<Void> createPatientHistoryNote(NoteBean noteBean) {
         return mediscreenNotesProxy.createNote(noteBean);
+    }
+
+
+    @Override
+    public String generateRiskReport(String patientId) {
+        return mediscreenRiskProxy.generateReport(patientId).getBody();
     }
 }

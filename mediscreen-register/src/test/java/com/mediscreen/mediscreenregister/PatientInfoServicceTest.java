@@ -77,4 +77,9 @@ public class PatientInfoServicceTest {
         NoteBean noteBean = new NoteBean("99","99", "Doctors said that...patient is OK", LocalDateTime.now() );
         assertTrue(patientInfoService.createPatientHistoryNote(noteBean).getStatusCode().is2xxSuccessful());
     }
+    @Test
+    public void getRiskReportTest() {
+        System.out.println(patientInfoService.generateRiskReport("1"));
+        assertNotNull(patientInfoService.generateRiskReport("1"));
+    }
 }

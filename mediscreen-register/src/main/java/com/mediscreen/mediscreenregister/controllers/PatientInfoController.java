@@ -130,6 +130,12 @@ public class PatientInfoController {
         }
         return "redirect:/patient/patientInfo";
     }
+    //Call to report microservice
+    @GetMapping("/generateRiskReport/{patientId}")
+    public String riskReport(@PathVariable String patientId, Model model){
+        model.addAttribute("riskReport", patientInfoService.generateRiskReport(patientId));
+        return "riskReport";
+    }
 
 
 

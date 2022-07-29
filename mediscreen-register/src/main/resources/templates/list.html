@@ -33,6 +33,7 @@
            <td th:text="${patient.getPhone()}"></td>
            <td><a class="btn btn-primary btn-sm" th:href="@{/patient/update/{id}(id=${patient.getId()})}">Edit</a>
                <a class="btn btn-info btn-sm" th:href="@{/patient/patHistory/{id}(id=${patient.getId()})}">Patient history</a>
+               <a class="btn btn-info btn-sm" th:href="@{/patient/generateRiskReport/{id}(id=${patient.getId()})}">Generate risk report</a>
            </td>
         </tr>
         </tbody>
