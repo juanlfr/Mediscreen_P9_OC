@@ -4,6 +4,7 @@ import com.mediscreen.mediscreenregister.DTO.PatientInfoRiskDTO;
 import com.mediscreen.mediscreenregister.models.NoteBean;
 import com.mediscreen.mediscreenregister.services.PatientInfoService;
 import com.mediscreen.mediscreenregister.models.PatientInfo;
+import feign.FeignException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,6 @@ public class PatientInfoController {
     private final Logger log = LogManager.getLogger(PatientInfoController.class);
 
     //Methods below for Thymeleaf IHM
-
     @GetMapping("/patientInfo")
     public String getPatientsInfo(Model model) {
         model.addAttribute("patientsInfoList", patientInfoService.findAll());
@@ -133,7 +133,13 @@ public class PatientInfoController {
     //Call to report microservice
     @GetMapping("/generateRiskReport/{patientId}")
     public String riskReport(@PathVariable String patientId, Model model){
-        model.addAttribute("riskReport", patientInfoService.generateRiskReport(patientId));
+        String riskReport = "Not enough elements to create a risk report";
+        try {
+            riskReport = patientInfoService.generateRiskReport(patientId);
+        }catch (FeignException.NotFound e) {
+            log.warn("Report not found for patient id {} , exeception {}", patientId, e);
+        }
+        model.addAttribute("riskReport", riskReport);
         return "riskReport";
     }
 
@@ -204,6 +210,8 @@ public class PatientInfoController {
         PatientInfoRiskDTO patientInfoRiskDTO = new PatientInfoRiskDTO();
         patientInfoRiskDTO.setDateOfBirth(patientInfo.getDateOfBirth());
         patientInfoRiskDTO.setGender(patientInfo.getGender());
+        patientInfoRiskDTO.setFirstName(patientInfo.getFirstName());
+        patientInfoRiskDTO.setLastName(patientInfo.getLastName());
         return patientInfoRiskDTO;
     }
 
