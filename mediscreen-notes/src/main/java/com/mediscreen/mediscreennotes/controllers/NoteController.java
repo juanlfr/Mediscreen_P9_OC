@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +27,7 @@ public class NoteController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Note>> getNotesFromPatient(@PathVariable("id") String id) {
+    public ResponseEntity<Optional<Note>> getNoteFromPatient(@PathVariable("id") @NotBlank String id) {
         Optional<Note> note = noteService.findById(id);
         if (note.isPresent()) {
             return new ResponseEntity<>(note, HttpStatus.OK);
@@ -35,7 +36,7 @@ public class NoteController {
         }
     }
     @GetMapping("/allNotes/{id}")
-    public List<Note> getPatientHistoryNotes(@PathVariable("id") String id) {
+    public List<Note> getPatientHistoryNotes(@PathVariable("id") @NotBlank String id) {
         try {
             log.info("Finding all notes by patient");
             return noteService.findAllById(id);

@@ -21,9 +21,13 @@
                 </div>
             </div>
         </div>
-        <a th:href="@{/patient/patHistory/add/{patientId}(patientId=${notes.get(0).getPatientId()})}" class="btn btn-primary">Add
+        <div th:if="${#lists.isEmpty(notes)}">
+            <h3>Any patient's history created yet</h3>
+        </div>
+        <br/>
+        <a th:href="@{/patHistory/add/{patientId}(patientId=${patientId})}" class="btn btn-primary">Add
             note</a>
-        <a th:href="@{/patient/patientInfo}" class="btn btn-primary">Return</a>
+        <a th:href="@{/patientInfo}" class="btn btn-primary">Return</a>
     </div>
 </body>
 </html>

@@ -19,7 +19,8 @@ public class UtilsTest {
 
     @Test
     public void calculateAgeTest() {
-        int calculatedAge = RiskUtils.calculateAge(LocalDate.of(1991,9,6));
-        assertEquals(30, calculatedAge);
+        LocalDate birthDate  = LocalDate.of(1991,9,6);
+        int calculatedAge = RiskUtils.calculateAge(birthDate);
+        assertEquals(LocalDate.now().getYear() - birthDate.getYear(), calculatedAge);
     }
 }

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientInfoController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mediscreen-register</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mediscreenregister.controllers</a> &gt; <span class="el_source">PatientInfoController.java</span></div><h1>PatientInfoController.java</h1><pre class="source lang-java linenums">package com.mediscreen.mediscreenregister.controllers;
+
+import com.mediscreen.mediscreenregister.models.NoteBean;
+import com.mediscreen.mediscreenregister.models.PatientIdBean;
+import com.mediscreen.mediscreenregister.models.PatientInfo;
+import com.mediscreen.mediscreenregister.services.PatientInfoService;
+import feign.FeignException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+<span class="fc" id="L22">public class PatientInfoController {</span>
+
+    @Autowired
+    private PatientInfoService patientInfoService;
+
+<span class="fc" id="L27">    private final Logger log = LogManager.getLogger(PatientInfoController.class);</span>
+
+    //Methods below for Thymeleaf IHM
+    @GetMapping(value ={&quot;/patientInfo&quot;, &quot;/&quot;})
+    public String getPatientsInfo(Model model) {
+<span class="nc" id="L32">        model.addAttribute(&quot;patientsInfoList&quot;, patientInfoService.findAll());</span>
+<span class="nc" id="L33">        return &quot;list&quot;;</span>
+    }
+
+    @GetMapping(&quot;/add&quot;)
+    public String addPatientInfoForm(PatientInfo patientInfo, Model model) {
+<span class="nc" id="L38">        model.addAttribute(&quot;patientInfo&quot;, new PatientInfo());</span>
+<span class="nc" id="L39">        return &quot;add&quot;;</span>
+    }
+
+    @PostMapping(&quot;/form&quot;)
+    public String formCreate(@ModelAttribute(&quot;patientInfo&quot;) @Valid PatientInfo patientInfo, BindingResult result) {
+
+<span class="nc" id="L45">        log.info(&quot;validate create patient method&quot;);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L47">            return &quot;add&quot;;</span>
+        }
+        try {
+<span class="nc" id="L50">            patientInfoService.savePatientInfo(patientInfo);</span>
+<span class="nc" id="L51">            log.info(&quot;Creating patientInfo&quot; + patientInfo);</span>
+<span class="nc" id="L52">        } catch (Exception e) {</span>
+<span class="nc" id="L53">            e.printStackTrace();</span>
+<span class="nc" id="L54">            log.error(&quot;Error Creating patientInfo&quot;);</span>
+<span class="nc" id="L55">        }</span>
+<span class="nc" id="L56">        return &quot;redirect:/patientInfo&quot;;</span>
+    }
+
+    @GetMapping(&quot;/update/{id}&quot;)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Long id, Model model) {
+
+<span class="nc" id="L62">        Optional&lt;PatientInfo&gt; patientInfo = patientInfoService.findById(id);</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (patientInfo.isPresent()){</span>
+<span class="nc" id="L64">            log.info(&quot;Finding patientInfo&quot;);</span>
+<span class="nc" id="L65">            model.addAttribute(&quot;patientInfo&quot;, patientInfo.get());</span>
+<span class="nc" id="L66">            return &quot;update&quot;;</span>
+        } else {
+<span class="nc" id="L68">            log.info(&quot;Patient not found&quot;);</span>
+<span class="nc" id="L69">            return &quot;PatientNotFound&quot;;</span>
+        }
+    }
+
+    @PostMapping(&quot;/update/{id}&quot;)
+    public String updatePatientInfoForm(@PathVariable(&quot;id&quot;) Long id, @Valid PatientInfo patientInfo, BindingResult result) {
+
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L77">            return &quot;patient/update&quot;;</span>
+        }
+        try {
+<span class="nc" id="L80">            Optional&lt;PatientInfo&gt; patientInfoUpdated = patientInfoService.findById(id);</span>
+
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            if (patientInfoUpdated.isPresent()) {</span>
+<span class="nc" id="L83">                patientInfoUpdated.get().setFirstName(patientInfo.getFirstName());</span>
+<span class="nc" id="L84">                patientInfoUpdated.get().setLastName(patientInfo.getLastName());</span>
+<span class="nc" id="L85">                patientInfoUpdated.get().setDateOfBirth(patientInfo.getDateOfBirth());</span>
+<span class="nc" id="L86">                patientInfoUpdated.get().setGender(patientInfo.getGender());</span>
+<span class="nc" id="L87">                patientInfoUpdated.get().setGender(patientInfo.getGender());</span>
+<span class="nc" id="L88">                patientInfoUpdated.get().setAddress(patientInfo.getAddress());</span>
+<span class="nc" id="L89">                patientInfoUpdated.get().setPhone(patientInfo.getPhone());</span>
+<span class="nc" id="L90">                patientInfoService.savePatientInfo(patientInfoUpdated.get());</span>
+<span class="nc" id="L91">                log.info(&quot;Updating patienttInfo&quot; + patientInfoUpdated.get());</span>
+            } else {
+<span class="nc" id="L93">                log.error(&quot;Patient id not found&quot;);</span>
+            }
+<span class="nc" id="L95">        } catch (Exception e) {</span>
+<span class="nc" id="L96">            e.printStackTrace();</span>
+<span class="nc" id="L97">            log.error(&quot;Error while updating patient info&quot;);</span>
+<span class="nc" id="L98">        }</span>
+<span class="nc" id="L99">        return &quot;redirect:/patientInfo&quot;;</span>
+    }
+
+    @GetMapping(&quot;/patHistory/{id}&quot;)
+    public String showPatientHistory(@PathVariable(&quot;id&quot;) String id, Model model) {
+<span class="nc" id="L104">        List&lt;NoteBean&gt; notesBean = patientInfoService.getAllPatientHistoryNotes(id);</span>
+<span class="nc" id="L105">        model.addAttribute(&quot;notes&quot;, notesBean);</span>
+<span class="nc" id="L106">        model.addAttribute(&quot;patientId&quot;, id);</span>
+<span class="nc" id="L107">        return &quot;patientHistory&quot;;</span>
+    }
+
+    @GetMapping(&quot;/patHistory/add/{patientId}&quot;)
+    public String addPatientHistoryForm(@PathVariable(&quot;patientId&quot;) String patientId, Model model) {
+<span class="nc" id="L112">        NoteBean noteBean = new NoteBean();</span>
+<span class="nc" id="L113">        noteBean.setPatientId(patientId);</span>
+<span class="nc" id="L114">        model.addAttribute(&quot;note&quot;, noteBean);</span>
+<span class="nc" id="L115">        return &quot;addHistory&quot;;</span>
+    }
+
+    @PostMapping(&quot;/patHistory/form&quot;)
+    public String formCreateHistoryNote(@ModelAttribute(&quot;note&quot;) @Valid NoteBean noteBean, BindingResult result) {
+
+<span class="nc" id="L121">        log.info(&quot;validate create patient method&quot;);</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L123">            return &quot;addHistory&quot;;</span>
+        }
+        try {
+<span class="nc" id="L126">            noteBean.setCreationDate(LocalDateTime.now());</span>
+<span class="nc" id="L127">            patientInfoService.createPatientHistoryNote(noteBean);</span>
+<span class="nc" id="L128">            log.info(&quot;Creating note&quot; + noteBean);</span>
+<span class="nc" id="L129">        } catch (Exception e) {</span>
+<span class="nc" id="L130">            e.printStackTrace();</span>
+<span class="nc" id="L131">            log.error(&quot;Error Creating patient note&quot;);</span>
+<span class="nc" id="L132">        }</span>
+<span class="nc" id="L133">        return &quot;redirect:/patientInfo&quot;;</span>
+    }
+
+    //Call to report microservice
+    @GetMapping(&quot;/generateRiskReport/{patientId}&quot;)
+    public String riskReport(@PathVariable String patientId, Model model) {
+<span class="nc" id="L139">        String riskReport = &quot;Not enough elements to create a risk report&quot;;</span>
+        try {
+<span class="nc" id="L141">            PatientIdBean patientIdBean = new PatientIdBean(patientId);</span>
+<span class="nc" id="L142">            riskReport = patientInfoService.generateRiskReport(patientIdBean);</span>
+<span class="nc" id="L143">        } catch (FeignException.NotFound e) {</span>
+<span class="nc" id="L144">            log.warn(&quot;Report not found for patient id {} , exeception {}&quot;, patientId, e);</span>
+<span class="nc" id="L145">        }</span>
+<span class="nc" id="L146">        model.addAttribute(&quot;riskReport&quot;, riskReport);</span>
+<span class="nc" id="L147">        return &quot;riskReport&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientInfoApiController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mediscreen-register</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mediscreenregister.controllers</a> &gt; <span class="el_source">PatientInfoApiController.java</span></div><h1>PatientInfoApiController.java</h1><pre class="source lang-java linenums">package com.mediscreen.mediscreenregister.controllers;
+
+import com.mediscreen.mediscreenregister.DTO.PatientInfoRiskDTO;
+import com.mediscreen.mediscreenregister.exceptions.FullNameException;
+import com.mediscreen.mediscreenregister.models.PatientInfo;
+import com.mediscreen.mediscreenregister.services.PatientInfoService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.constraints.NotBlank;
+import java.net.URI;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+@RestController
+@RequestMapping(&quot;/api/v1/patient&quot;)
+<span class="fc" id="L22">public class PatientInfoApiController {</span>
+    @Autowired
+    private PatientInfoService patientInfoService;
+
+<span class="fc" id="L26">    private final Logger log = LogManager.getLogger(PatientInfoController.class);</span>
+
+    @GetMapping(&quot;/patientName/{fullName}&quot;)
+    public ResponseEntity&lt;PatientInfo&gt; getPatientInfo(@PathVariable(&quot;fullName&quot;) final @NotBlank String fullName) throws FullNameException {
+
+<span class="fc" id="L31">        log.info(&quot;Getting patient information with name : &quot; + fullName);</span>
+<span class="fc" id="L32">        PatientInfo patientInfo = null;</span>
+<span class="fc" id="L33">        patientInfo = patientInfoService.getPatientInfo(fullName);</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (patientInfo != null) {</span>
+<span class="fc" id="L35">            return new ResponseEntity&lt;&gt;(patientInfo, HttpStatus.OK);</span>
+        } else {
+<span class="fc" id="L37">            throw new NoSuchElementException();</span>
+        }
+    }
+
+    @GetMapping(&quot;/id/{id}&quot;)
+    public ResponseEntity&lt;Optional&lt;PatientInfo&gt;&gt; getPatientInfoById(@PathVariable(&quot;id&quot;) @NotBlank Long id) {
+<span class="fc" id="L43">        Optional&lt;PatientInfo&gt; patientInfo = patientInfoService.findById(id);</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        if (patientInfo.isPresent()) {</span>
+<span class="fc" id="L45">            return new ResponseEntity&lt;&gt;(patientInfo, HttpStatus.OK);</span>
+        } else {
+<span class="nc" id="L47">            throw new NoSuchElementException();</span>
+        }
+    }
+
+    /**
+     * Creates and save a patient in BDD
+     *
+     * @return ResponseEntity http status:201
+     */
+
+    @PostMapping(&quot;/add&quot;)
+    public ResponseEntity&lt;Void&gt; createPatientInfo(@RequestBody PatientInfo patientInfo) {
+<span class="fc" id="L59">        log.info(&quot;Creating patient: &quot; + patientInfo.toString());</span>
+        try {
+<span class="fc" id="L61">            PatientInfo patientAdded = patientInfoService.savePatientInfo(patientInfo);</span>
+<span class="fc" id="L62">            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path(&quot;/{id}&quot;).buildAndExpand(patientAdded.getId()).toUri();</span>
+<span class="fc" id="L63">            return ResponseEntity.created(location).build();</span>
+
+<span class="nc" id="L65">        } catch (Exception e) {</span>
+<span class="nc" id="L66">            log.error(&quot;Error on patient creation&quot;);</span>
+<span class="nc" id="L67">            return new ResponseEntity&lt;Void&gt;(HttpStatus.INTERNAL_SERVER_ERROR);</span>
+        }
+    }
+    @PutMapping(&quot;/update/{fullName}&quot;)
+    public ResponseEntity&lt;PatientInfo&gt; updatepatientInfo(@PathVariable(&quot;fullName&quot;) final @NotBlank String fullName, @RequestBody PatientInfo patientInfo) throws NoSuchElementException, FullNameException {
+
+<span class="fc" id="L73">        ResponseEntity&lt;PatientInfo&gt; patientInfoUpdated = this.getPatientInfo(fullName);</span>
+
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (patientInfoUpdated.getBody() != null) {</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">            if (patientInfo.getFirstName() != null)</span>
+<span class="nc" id="L77">                patientInfoUpdated.getBody().setFirstName(patientInfo.getFirstName());</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">            if (patientInfo.getLastName() != null) patientInfoUpdated.getBody().setLastName(patientInfo.getLastName());</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">            if (patientInfo.getDateOfBirth() != null)</span>
+<span class="nc" id="L80">                patientInfoUpdated.getBody().setDateOfBirth(patientInfo.getDateOfBirth());</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">            if (patientInfo.getGender() != null) patientInfoUpdated.getBody().setGender(patientInfo.getGender());</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">            if (patientInfo.getAddress() != null) patientInfoUpdated.getBody().setAddress(patientInfo.getAddress());</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">            if (patientInfo.getPhone() != null) patientInfoUpdated.getBody().setPhone(patientInfo.getPhone());</span>
+
+<span class="fc" id="L85">            log.info(&quot;Updating patientInfo information&quot; + patientInfoUpdated.toString());</span>
+<span class="fc" id="L86">            PatientInfo patientInfoToUpdate = patientInfoService.savePatientInfo(patientInfoUpdated.getBody());</span>
+
+<span class="fc" id="L88">            return new ResponseEntity&lt;&gt;(patientInfoToUpdate, HttpStatus.OK);</span>
+        } else {
+<span class="nc" id="L90">            throw new NoSuchElementException();</span>
+        }
+    }
+    @GetMapping(&quot;/riskInfo/{id}&quot;)
+    public ResponseEntity&lt;PatientInfoRiskDTO&gt; getPatientInfoForRisk(@PathVariable(&quot;id&quot;) Long id) {
+<span class="nc" id="L95">        Optional&lt;PatientInfo&gt; patientInfo = patientInfoService.findById(id);</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (patientInfo.isPresent()) {</span>
+<span class="nc" id="L97">            PatientInfoRiskDTO patientInfoRiskDTO = patientInfoToDTO(patientInfo.get());</span>
+<span class="nc" id="L98">            return new ResponseEntity&lt;&gt;(patientInfoRiskDTO, HttpStatus.OK);</span>
+        } else {
+<span class="nc" id="L100">            throw new NoSuchElementException();</span>
+        }
+    }
+
+    private PatientInfoRiskDTO patientInfoToDTO(PatientInfo patientInfo) {
+<span class="nc" id="L105">        PatientInfoRiskDTO patientInfoRiskDTO = new PatientInfoRiskDTO();</span>
+<span class="nc" id="L106">        patientInfoRiskDTO.setDateOfBirth(patientInfo.getDateOfBirth());</span>
+<span class="nc" id="L107">        patientInfoRiskDTO.setGender(patientInfo.getGender());</span>
+<span class="nc" id="L108">        patientInfoRiskDTO.setFirstName(patientInfo.getFirstName());</span>
+<span class="nc" id="L109">        patientInfoRiskDTO.setLastName(patientInfo.getLastName());</span>
+<span class="nc" id="L110">        return patientInfoRiskDTO;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -16,7 +16,7 @@
     </div>
 
     <div class="row">
-        <form action="#" th:action="@{/patient/update/{id}(id=${patientInfo.getId()})}" th:object="${patientInfo}" method="post" class="form-horizontal" style="width: 100%">
+        <form action="#" th:action="@{/update/{id}(id=${patientInfo.getId()})}" th:object="${patientInfo}" method="post" class="form-horizontal" style="width: 100%">
 
             <div class="form-group">
                 <label for="firstName" class="col-sm-2 control-label">firstName</label>
@@ -63,7 +63,7 @@
 
             <div class="form-group">
                 <div class="col-sm-12">
-                    <a class="btn btn-danger btn-sm" href="/patient/patientInfo">Cancel</a>
+                    <a class="btn btn-danger btn-sm" href="/patientInfo">Cancel</a>
                     <button class="btn btn-primary btn-sm" type="submit">Submit</button>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 package com.mediscreen.mediscreenregister.exceptions;
 
+import com.mediscreen.mediscreenregister.controllers.PatientInfoApiController;
 import com.mediscreen.mediscreenregister.controllers.PatientInfoController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +15,7 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 public class ErrorHandlingControllerAdvice {
 
-    private Logger log = LogManager.getLogger(PatientInfoController.class);
+    private Logger log = LogManager.getLogger(PatientInfoApiController.class);
 
     @ExceptionHandler(ConstraintViolationException.class)
     ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
@@ -25,5 +26,10 @@ public class ErrorHandlingControllerAdvice {
     ResponseEntity<String> handleNoSuchElementExeption(NoSuchElementException e) {
         log.error("Element not found" + e);
         return new ResponseEntity<String>("Element not found", HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(FullNameException.class)
+    ResponseEntity<String> handleFullNameException(FullNameException e) {
+        log.error("Full name is required" + e);
+        return new ResponseEntity<String>("Full name is required", HttpStatus.BAD_REQUEST);
     }
 }

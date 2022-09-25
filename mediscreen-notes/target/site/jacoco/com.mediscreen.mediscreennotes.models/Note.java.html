@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Note.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mediscreen-notes</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mediscreennotes.models</a> &gt; <span class="el_source">Note.java</span></div><h1>Note.java</h1><pre class="source lang-java linenums">package com.mediscreen.mediscreennotes.models;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+@Document(collection = &quot;notes&quot;)
+public class Note {
+
+    @Id
+    private String id;
+    @Field(&quot;patientId&quot;)
+    private String patientId;
+    private String note;
+    private LocalDateTime creationDate;
+
+<span class="fc" id="L20">    public Note() {</span>
+<span class="fc" id="L21">    }</span>
+
+<span class="nc" id="L23">    public Note(String id, String patientId, String note, LocalDateTime creationDate) {</span>
+<span class="nc" id="L24">        this.id= id;</span>
+<span class="nc" id="L25">        this.patientId = patientId;</span>
+<span class="nc" id="L26">        this.note = note;</span>
+<span class="nc" id="L27">        this.creationDate = creationDate;</span>
+<span class="nc" id="L28">    }</span>
+
+    public String getId() {
+<span class="fc" id="L31">        return id;</span>
+    }
+
+    public String getPatientId() {
+<span class="fc" id="L35">        return patientId;</span>
+    }
+
+    public void setPatientId(String patientId) {
+<span class="fc" id="L39">        this.patientId = patientId;</span>
+<span class="fc" id="L40">    }</span>
+
+    public String getNote() {
+<span class="fc" id="L43">        return note;</span>
+    }
+
+    public void setNote(String note) {
+<span class="fc" id="L47">        this.note = note;</span>
+<span class="fc" id="L48">    }</span>
+
+    public LocalDateTime getCreationDate() {
+<span class="fc" id="L51">        return creationDate;</span>
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+<span class="fc" id="L55">        this.creationDate = creationDate;</span>
+<span class="fc" id="L56">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L61" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="nc" id="L62">        Note note1 = (Note) o;</span>
+<span class="nc bnc" id="L63" title="All 6 branches missed.">        return getPatientId().equals(note1.getPatientId()) &amp;&amp; Objects.equals(getNote(), note1.getNote()) &amp;&amp; Objects.equals(getCreationDate(), note1.getCreationDate());</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L68">        return Objects.hash(getPatientId(), getNote(), getCreationDate());</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L73">        return &quot;Note{&quot; +</span>
+                &quot;id='&quot; + patientId + '\'' +
+                &quot;, note='&quot; + note + '\'' +
+                &quot;, creationDate=&quot; + creationDate +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

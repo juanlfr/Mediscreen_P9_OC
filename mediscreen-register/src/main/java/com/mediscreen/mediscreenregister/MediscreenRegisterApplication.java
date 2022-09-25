@@ -6,9 +6,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients("com.mediscreen.mediscreenregister")
-public class MediscreenRegistryApplication {
+public class MediscreenRegisterApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(MediscreenRegistryApplication.class, args);
+		SpringApplication.run(MediscreenRegisterApplication.class, args);
 	}
 
 }

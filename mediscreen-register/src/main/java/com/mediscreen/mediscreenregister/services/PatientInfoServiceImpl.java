@@ -1,6 +1,8 @@
 package com.mediscreen.mediscreenregister.services;
 
+import com.mediscreen.mediscreenregister.exceptions.FullNameException;
 import com.mediscreen.mediscreenregister.models.NoteBean;
+import com.mediscreen.mediscreenregister.models.PatientIdBean;
 import com.mediscreen.mediscreenregister.models.PatientInfo;
 import com.mediscreen.mediscreenregister.proxies.MediscreenNotesProxy;
 import com.mediscreen.mediscreenregister.proxies.MediscreenRiskProxy;
@@ -24,9 +26,13 @@ public class PatientInfoServiceImpl implements PatientInfoService {
     @Autowired
     private MediscreenRiskProxy mediscreenRiskProxy;
 
-    public PatientInfo getPatientInfo(String fullName) {
+    public PatientInfo getPatientInfo(String fullName) throws FullNameException {
         String[] name = fullName.trim().split("\\s+");
-        return patientInfoRepository.findByFirstNameAndLastName(name[0], name[1]);
+        if (name.length > 1) {
+            return patientInfoRepository.findByFirstNameAndLastName(name[0], name[1]);
+        } else {
+            throw new FullNameException("At least a two words name is required");
+        }
 
     }
 
@@ -55,7 +61,7 @@ public class PatientInfoServiceImpl implements PatientInfoService {
 
 
     @Override
-    public String generateRiskReport(String patientId) {
+    public String generateRiskReport(PatientIdBean patientId) {
         return mediscreenRiskProxy.generateReport(patientId).getBody();
     }
 }

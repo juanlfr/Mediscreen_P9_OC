@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientInfoServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mediscreen-register</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mediscreenregister.services</a> &gt; <span class="el_source">PatientInfoServiceImpl.java</span></div><h1>PatientInfoServiceImpl.java</h1><pre class="source lang-java linenums">package com.mediscreen.mediscreenregister.services;
+
+import com.mediscreen.mediscreenregister.exceptions.FullNameException;
+import com.mediscreen.mediscreenregister.models.NoteBean;
+import com.mediscreen.mediscreenregister.models.PatientIdBean;
+import com.mediscreen.mediscreenregister.models.PatientInfo;
+import com.mediscreen.mediscreenregister.proxies.MediscreenNotesProxy;
+import com.mediscreen.mediscreenregister.proxies.MediscreenRiskProxy;
+import com.mediscreen.mediscreenregister.repositories.PatientInfoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+<span class="fc" id="L18">public class PatientInfoServiceImpl implements PatientInfoService {</span>
+
+    @Autowired
+    private PatientInfoRepository patientInfoRepository;
+
+    @Autowired
+    private MediscreenNotesProxy mediscreenNotesProxy;
+
+    @Autowired
+    private MediscreenRiskProxy mediscreenRiskProxy;
+
+    public PatientInfo getPatientInfo(String fullName) throws FullNameException {
+<span class="fc" id="L30">        String[] name = fullName.trim().split(&quot;\\s+&quot;);</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (name.length &gt; 1) {</span>
+<span class="fc" id="L32">            return patientInfoRepository.findByFirstNameAndLastName(name[0], name[1]);</span>
+        } else {
+<span class="fc" id="L34">            throw new FullNameException(&quot;At least a two words name is required&quot;);</span>
+        }
+
+    }
+
+    public PatientInfo savePatientInfo(PatientInfo patientInfo) {
+<span class="fc" id="L40">        return patientInfoRepository.save(patientInfo);</span>
+    }
+
+    @Override
+    public List&lt;PatientInfo&gt; findAll() {
+<span class="fc" id="L45">        return patientInfoRepository.findAll();</span>
+    }
+
+    @Override
+    public Optional&lt;PatientInfo&gt; findById(Long id) {
+<span class="fc" id="L50">        return patientInfoRepository.findById(id);</span>
+    }
+
+    @Override
+    public List&lt;NoteBean&gt; getAllPatientHistoryNotes(String id) {
+<span class="fc" id="L55">        return mediscreenNotesProxy.findAllById(id);</span>
+    }
+    @Override
+    public ResponseEntity&lt;Void&gt; createPatientHistoryNote(NoteBean noteBean) {
+<span class="fc" id="L59">        return mediscreenNotesProxy.createNote(noteBean);</span>
+    }
+
+
+    @Override
+    public String generateRiskReport(PatientIdBean patientId) {
+<span class="fc" id="L65">        return mediscreenRiskProxy.generateReport(patientId).getBody();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

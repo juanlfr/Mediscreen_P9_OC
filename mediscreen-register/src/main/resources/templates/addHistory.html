@@ -17,7 +17,7 @@
 
     <div class="row">
 
-        <form action="#" th:action="@{/patient/patHistory/form}" th:object="${note}" method="post" class="form-horizontal" style="width: 100%">
+        <form action="#" th:action="@{/patHistory/form}" th:object="${note}" method="post" class="form-horizontal" style="width: 100%">
 
             <div class="form-group">
                 <label for="note" class="col-sm-2 control-label">Note</label>
@@ -32,7 +32,7 @@
 
             <div class="form-group">
                 <div class="col-sm-12">
-                    <a class="btn btn-danger btn-sm" href="/patient/patientInfo">Cancel</a>
+                    <a class="btn btn-danger btn-sm" href="/patientInfo">Cancel</a>
                     <button class="btn btn-primary btn-sm" type="submit">Submit</button>
                 </div>
             </div>

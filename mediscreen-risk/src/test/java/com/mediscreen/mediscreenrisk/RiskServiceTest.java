@@ -9,10 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 
 @SpringBootTest
@@ -50,12 +53,14 @@ public class RiskServiceTest {
 
     @Test
     public void getPatientInfoTest() {
+        assumeTrue(isMicroserviceRegisterRunning());
         PatientInfoBean patientInfoBean = riskService.getPatientInfoById("1");
         System.out.println(patientInfoBean.toString());
         Assertions.assertNotNull(patientInfoBean);
     }
     @Test
     public void getPatientHistoryNoteTest() {
+        assumeTrue(isMicroserviceNoteRunning());
         List<PatientHistoryBean> patientHistoryBeans = riskService.getPatientHistoryById("2");
         patientHistoryBeans.forEach(note -> System.out.println(patientHistoryBeans));
         Assertions.assertNotNull(patientHistoryBeans);
@@ -130,7 +135,28 @@ public class RiskServiceTest {
         Assertions.assertEquals(RiskLevel.EARLY_ONSET, riskEarlyOnset3);
 
     }
-
+    private boolean isMicroserviceRegisterRunning() {
+        boolean isUpAndPatientIdExist = false;
+        try {
+            if (riskService.getPatientInfoById("1") != null) {
+                isUpAndPatientIdExist = true;
+            }
+        }catch (Exception e) {
+            //microservice down
+        }
+        return isUpAndPatientIdExist;
+    }
+    private boolean isMicroserviceNoteRunning() {
+        boolean isUpAndPatientIdExist = false;
+        try {
+            if(riskService.getPatientHistoryById("2").size() > 0) {
+                isUpAndPatientIdExist = true;
+            }
+        }catch (Exception e) {
+            //microservice down
+        }
+        return isUpAndPatientIdExist;
+    }
 
 
 

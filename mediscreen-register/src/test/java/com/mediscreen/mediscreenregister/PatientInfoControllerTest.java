@@ -2,7 +2,7 @@ package com.mediscreen.mediscreenregister;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.mediscreen.mediscreenregister.controllers.PatientInfoController;
+import com.mediscreen.mediscreenregister.controllers.PatientInfoApiController;
 import com.mediscreen.mediscreenregister.models.PatientInfo;
 import com.mediscreen.mediscreenregister.services.PatientInfoService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,13 +14,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = PatientInfoController.class)
+@WebMvcTest(controllers = PatientInfoApiController.class)
 public class PatientInfoControllerTest {
 
     @Autowired
@@ -53,7 +52,7 @@ public class PatientInfoControllerTest {
     @Test
     public void getPatientInfoTest() throws Exception {
         Mockito.when(patientInfoService.getPatientInfo(Mockito.any(String.class))).thenReturn(patientInfo);
-        this.mockMvc.perform(get("/patient/api/Patient Dupont"))
+        this.mockMvc.perform(get("/api/v1/patient/patientName/Patient Dupont"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", is("Patient")));
@@ -63,7 +62,7 @@ public class PatientInfoControllerTest {
     @Test
     public void getPatientInfoNotFoundTest() throws Exception {
         Mockito.when(patientInfoService.getPatientInfo(Mockito.any(String.class))).thenReturn(null);
-        this.mockMvc.perform(get("/patient/api/Patient Unknown"))
+        this.mockMvc.perform(get("/api/v1/patient/patientName/Patient Unknown"))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NoSuchElementException));
@@ -73,7 +72,7 @@ public class PatientInfoControllerTest {
     @Test
     public void getPatientInfoByIdTest() throws Exception {
         Mockito.when(patientInfoService.findById(Mockito.any(Long.class))).thenReturn(Optional.ofNullable(patientInfo));
-        this.mockMvc.perform(get("/patient/api/id/1"))
+        this.mockMvc.perform(get("/api/v1/patient/id/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", is("Patient")));
@@ -83,7 +82,7 @@ public class PatientInfoControllerTest {
 
         when(patientInfoService.savePatientInfo(Mockito.any(PatientInfo.class))).thenReturn(patientInfo);
 
-        this.mockMvc.perform(post("/patient/add")
+        this.mockMvc.perform(post("/api/v1/patient/add")
                         .content(toJsonString(patientInfo))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -99,7 +98,7 @@ public class PatientInfoControllerTest {
         when(patientInfoService.savePatientInfo(Mockito.any(PatientInfo.class))).thenReturn(patientInfo);
 
 
-        this.mockMvc.perform(put("/patient/api/Patient Dupont")
+        this.mockMvc.perform(put("/api/v1/patient/update/Patient Dupont")
                         .content(toJsonString(patientInfoToUpdate))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

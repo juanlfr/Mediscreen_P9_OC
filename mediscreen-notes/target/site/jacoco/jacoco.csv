@@ -1,0 +1,6 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+mediscreen-notes,com.mediscreen.mediscreennotes.controllers,NoteController,28,67,1,1,7,15,1,4,0,4
+mediscreen-notes,com.mediscreen.mediscreennotes,MediscreenNotesApplication,5,3,0,0,2,1,1,1,1,1
+mediscreen-notes,com.mediscreen.mediscreennotes.exceptions,ErrorHandlingControllerAdvice,34,7,0,0,4,2,2,1,2,1
+mediscreen-notes,com.mediscreen.mediscreennotes.services,NoteServiceImpl,16,3,0,0,3,1,3,1,3,1
+mediscreen-notes,com.mediscreen.mediscreennotes.models,Note,73,53,12,0,11,13,9,9,3,9

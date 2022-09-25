@@ -1,6 +1,7 @@
 package com.mediscreen.mediscreenrisk.controllers;
 
 import com.mediscreen.mediscreenrisk.model.PatientHistoryBean;
+import com.mediscreen.mediscreenrisk.model.PatientIdDTO;
 import com.mediscreen.mediscreenrisk.model.PatientInfoBean;
 import com.mediscreen.mediscreenrisk.services.RiskService;
 import org.apache.logging.log4j.LogManager;
@@ -23,9 +24,9 @@ public class RiskController {
     RiskService riskService;
 
     @PostMapping("/assess/id")
-    public ResponseEntity<String> assessDiabetesRisk(@RequestBody String patientId) {
-        PatientInfoBean patientInfoBean = riskService.getPatientInfoById(patientId);
-        List<PatientHistoryBean> patientHistoryBeans = riskService.getPatientHistoryById(patientId);
+    public ResponseEntity<String> assessDiabetesRisk(@RequestBody PatientIdDTO patientId) {
+        PatientInfoBean patientInfoBean = riskService.getPatientInfoById(patientId.getPatId());
+        List<PatientHistoryBean> patientHistoryBeans = riskService.getPatientHistoryById(patientId.getPatId());
         if (patientInfoBean != null && !patientHistoryBeans.isEmpty()) {
             log.info("Risk Assessment for patient: " + patientInfoBean.getLastName());
             String deabetesAssess = riskService.diabetesAssess(patientInfoBean, patientHistoryBeans);
