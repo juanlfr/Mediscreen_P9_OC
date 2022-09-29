@@ -38,3 +38,6 @@ INSERT INTO patient_info VALUES ('7','12 Cobblestone St','1966-12-31','Claire','
 INSERT INTO patient_info VALUES ('8','193 Vale St','1945-06-24','Max','M','Buckland','833-534-0864');
 INSERT INTO patient_info VALUES ('9','12 Beechwood Road','1964-06-18','Natalie','F','Clark','241-467-9197');
 INSERT INTO patient_info VALUES ('10','1202 Bumble Dr','1959-06-28','Piers','M','Bailey','747-815-0557');
+
+INSERT INTO hibernate_sequence values (11);
+
