@@ -4,6 +4,7 @@ import com.mediscreen.mediscreenrisk.enums.RiskLevel;
 import com.mediscreen.mediscreenrisk.model.PatientHistoryBean;
 import com.mediscreen.mediscreenrisk.model.PatientInfoBean;
 import com.mediscreen.mediscreenrisk.services.RiskServiceImpl;
+import com.mediscreen.mediscreenrisk.utils.RiskUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,22 +90,22 @@ public class RiskServiceTest {
 
         //NONE
         String riskReportNone = riskService.diabetesAssess(patientRiskNone, patientHistoryBeans);
-        Assertions.assertEquals("Patient: Pippa Rees (age 69) diabetes assessment is: None", riskReportNone);
+        Assertions.assertEquals("Patient: Pippa Rees (age " + RiskUtils.calculateAge(patientRiskNone.getDateOfBirth()) + ") diabetes assessment is: None", riskReportNone);
         //BORDERLINE
         patientHistoryBeans.add(patientHistory2TriggerWord);
         String riskReportBorderline = riskService.diabetesAssess(patientRiskBorderLine, patientHistoryBeans );
         patientHistoryBeans.clear();
-        Assertions.assertEquals("Patient: Lucas Ferguson (age 54) diabetes assessment is: Borderline", riskReportBorderline);
+        Assertions.assertEquals("Patient: Lucas Ferguson (age "+ RiskUtils.calculateAge(patientRiskBorderLine.getDateOfBirth()) +") diabetes assessment is: Borderline", riskReportBorderline);
         //DANGER Cas 1
         patientHistoryBeans.add(patientHistory3TriggerWord);
         String riskReportDanger = riskService.diabetesAssess(patientDangerCas1Tw3, patientHistoryBeans);
         patientHistoryBeans.clear();
-        Assertions.assertEquals("Patient: Pedro Perez (age 22) diabetes assessment is: Danger", riskReportDanger);
+        Assertions.assertEquals("Patient: Pedro Perez (age " + RiskUtils.calculateAge(patientDangerCas1Tw3.getDateOfBirth()) + ") diabetes assessment is: Danger", riskReportDanger);
         //EARLY ONSET Cas 1
         patientHistoryBeans.add(patientHistory5TriggerWord);
         String riskReportEarlyOnset1 = riskService.diabetesAssess(patientEarlyOnsetCas1Tw5, patientHistoryBeans);
         patientHistoryBeans.clear();
-        Assertions.assertEquals("Patient: Juan Rockas (age 22) diabetes assessment is: Early onset", riskReportEarlyOnset1);
+        Assertions.assertEquals("Patient: Juan Rockas (age " + RiskUtils.calculateAge(patientEarlyOnsetCas1Tw5.getDateOfBirth()) +") diabetes assessment is: Early onset", riskReportEarlyOnset1);
 
     }
     @Test

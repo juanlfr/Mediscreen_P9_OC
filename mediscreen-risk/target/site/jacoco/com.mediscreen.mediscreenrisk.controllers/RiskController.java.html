@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RiskController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mediscreen-risk</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.mediscreenrisk.controllers</a> &gt; <span class="el_source">RiskController.java</span></div><h1>RiskController.java</h1><pre class="source lang-java linenums">package com.mediscreen.mediscreenrisk.controllers;
+
+import com.mediscreen.mediscreenrisk.model.PatientHistoryBean;
+import com.mediscreen.mediscreenrisk.model.PatientIdDTO;
+import com.mediscreen.mediscreenrisk.model.PatientInfoBean;
+import com.mediscreen.mediscreenrisk.services.RiskService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+<span class="fc" id="L19">public class RiskController {</span>
+
+<span class="fc" id="L21">    private final Logger log = LogManager.getLogger(RiskController.class);</span>
+
+    @Autowired
+    RiskService riskService;
+
+    @PostMapping(&quot;/assess/id&quot;)
+    public ResponseEntity&lt;String&gt; assessDiabetesRisk(@RequestBody PatientIdDTO patientId) {
+<span class="nc" id="L28">        PatientInfoBean patientInfoBean = riskService.getPatientInfoById(patientId.getPatId());</span>
+<span class="nc" id="L29">        List&lt;PatientHistoryBean&gt; patientHistoryBeans = riskService.getPatientHistoryById(patientId.getPatId());</span>
+<span class="nc bnc" id="L30" title="All 4 branches missed.">        if (patientInfoBean != null &amp;&amp; !patientHistoryBeans.isEmpty()) {</span>
+<span class="nc" id="L31">            log.info(&quot;Risk Assessment for patient: &quot; + patientInfoBean.getLastName());</span>
+<span class="nc" id="L32">            String deabetesAssess = riskService.diabetesAssess(patientInfoBean, patientHistoryBeans);</span>
+<span class="nc" id="L33">            return new ResponseEntity&lt;&gt;(deabetesAssess, HttpStatus.OK);</span>
+        } else {
+<span class="nc" id="L35">            log.error(&quot;Patient info or history not found&quot;);</span>
+<span class="nc" id="L36">            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
