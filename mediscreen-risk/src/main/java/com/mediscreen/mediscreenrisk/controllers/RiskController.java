@@ -27,13 +27,13 @@ public class RiskController {
     public ResponseEntity<String> assessDiabetesRisk(@RequestBody PatientIdDTO patientId) {
         PatientInfoBean patientInfoBean = riskService.getPatientInfoById(patientId.getPatId());
         List<PatientHistoryBean> patientHistoryBeans = riskService.getPatientHistoryById(patientId.getPatId());
-        if (patientInfoBean != null && !patientHistoryBeans.isEmpty()) {
+        if (patientInfoBean == null || patientHistoryBeans.isEmpty()) {
+            log.error("Patient info or history not found");
+            return new ResponseEntity<>("Patient info or history not found", HttpStatus.NOT_FOUND);
+        } else {
             log.info("Risk Assessment for patient: " + patientInfoBean.getLastName());
             String deabetesAssess = riskService.diabetesAssess(patientInfoBean, patientHistoryBeans);
             return new ResponseEntity<>(deabetesAssess, HttpStatus.OK);
-        } else {
-            log.error("Patient info or history not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

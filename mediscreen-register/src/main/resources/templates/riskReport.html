@@ -3,15 +3,33 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-  <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"/>
+    <title>Diabetes risk report</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"/>
 </head>
 <body>
-    <div class="container">
-        <h2>Diabetes risk report</h2>
-        <p th:text="${riskReport}"></p>
-    </div>
+<div class="container">
+    <h2>Diabetes risk report</h2>
+
+        <div th:if="${not #strings.isEmpty(notEnoughElements) or notEnoughElements != null}">
+            <div class="card">
+                <h5 class="card-header">Report not available</h5>
+                <div class="card-body">
+                    <p th:text="${notEnoughElements}"></p>
+                </div>
+            </div>
+        </div>
+        <div th:if="${report != null}">
+            <div class="card">
+                <h5  th:text="'Patient id : '  + ${patientInfoId}" class="card-header"></h5>
+                <div class="card-body">
+                    <p th:text="${report}"></p>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <a th:href="@{/patientInfo}" class="btn btn-primary">Return</a>
+</div>
 </body>
 </html>

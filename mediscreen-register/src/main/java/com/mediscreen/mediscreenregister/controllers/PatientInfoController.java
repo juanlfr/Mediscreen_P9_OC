@@ -136,14 +136,18 @@ public class PatientInfoController {
     //Call to report microservice
     @GetMapping("/generateRiskReport/{patientId}")
     public String riskReport(@PathVariable String patientId, Model model) {
-        String riskReport = "Not enough elements to create a risk report";
+
         try {
             PatientIdBean patientIdBean = new PatientIdBean(patientId);
-            riskReport = patientInfoService.generateRiskReport(patientIdBean);
-        } catch (FeignException.NotFound e) {
-            log.warn("Report not found for patient id {} , exeception {}", patientId, e);
+            String riskReport = patientInfoService.generateRiskReport(patientIdBean);
+            model.addAttribute("patientInfoId", patientId );
+            model.addAttribute("report", riskReport);
+        } catch (Exception e) {
+            log.warn("Error while creating report for patient id {} , exeception {}", patientId, e);
+            String riskReportNotEnoghElements = "Patient info or history not found, impossible to create report";
+            model.addAttribute("notEnoughElements", riskReportNotEnoghElements);
         }
-        model.addAttribute("riskReport", riskReport);
+
         return "riskReport";
     }
 }
